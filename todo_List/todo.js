@@ -41,7 +41,7 @@ class TodoList {
 
   forEach(callback) {
     for (let idx = 0; idx < this.todos.length; idx++) {
-      callback(this.todos[idx]);
+      callback(this.todos[idx], idx);
     }
   }
 
@@ -49,10 +49,22 @@ class TodoList {
     let filtered = new TodoList(this.title);
 
     for (let idx = 0; idx < this.todos.length; idx++) {
-      let value = this.todos[idx]
-      if (callback(value)) filtered.add(value);
+      let todo = this.todos[idx]
+      if (callback(todo, idx)) filtered.add(todo);
     }
     return filtered;
+  }
+
+  findByTitle(title) {
+    return this.filter(todo => todo.title === title).first();
+  }
+
+  allDone() {
+    return this.filter(todo => todo.isDone());
+  }
+
+  allNotDone() {
+    return this.filter(todo => !todo.isDone());
   }
 
   toString() {
@@ -92,12 +104,6 @@ class TodoList {
     return value;
   }
 
-  _validateIndex(idx) {
-    if (!(this.todos.hasOwnProperty(idx))) {
-      throw new ReferenceError(`invalid index: ${idx}`);
-    }
-  }
-
   markDoneAt(idx) {
     let todo = this.itemAt(idx);
     todo.markDone(); 
@@ -108,8 +114,24 @@ class TodoList {
     todo.markUndone();
   }
 
+  markDone(title) {
+    this.findByTitle(title).markDone(title);
+  }
+
+  markAllDone() {
+    this.forEach(todo => todo.markDone());
+  }
+
+  markAllUndone() {
+    this.forEach(todo => !todo.markDone());
+  }
+
   isDone() {
     return this.todos.every(todo => todo.isDone());
+  }
+
+  toArray() {
+    return this.todos.slice();
   }
 
   shift() {
@@ -119,27 +141,10 @@ class TodoList {
   pop() {
     return this.todos.pop();
   }
+
+  _validateIndex(idx) {
+    if (!(this.todos.hasOwnProperty(idx))) {
+      throw new ReferenceError(`invalid index: ${idx}`);
+    }
+  }
 }
-
-
-let todo1 = new Todo("Buy milk");
-let todo2 = new Todo("Clean room");
-let todo3 = new Todo("Go to the gym");
-let todo4 = new Todo("Go shopping");
-let todo5 = new Todo("Feed the cats");
-let todo6 = new Todo("Study for Launch School");
-let list = new TodoList("Today's Todos");
-
-list.add(todo1);
-list.add(todo2);
-list.add(todo3);
-list.add(todo4);
-list.add(todo5);
-list.add(todo6);
-todo1.markDone();
-todo5.markDone();
-
-let doneTodos = list.filter(todo => todo.isDone());
-console.log(doneTodos);
-
-console.log(doneTodos instanceof TodoList)
