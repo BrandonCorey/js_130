@@ -1,82 +1,35 @@
-"use strict"
-const createItem = function(name, category, quantity) {
-  const nameIsValid = () => name.replace(' ', '').length >= 5;
-  const quantityIsValid = () => quantity !== undefined;
-  const categoryIsValid = () => {
-    return (
-      category.replace(' ', '') === category &&
-      category.replace(' ', '').length >= 5
-      );
-  }
-
-  const formatIsValid = () => {
-    if (Array.from(arguments).length < 3) return false;
-    return (nameIsValid() && quantityIsValid() && categoryIsValid());
-    
-  }
-
-  const generateSKU = () => {
-    let filterName = name.replace(' ', '');''
-    let filterCategory = category.replace(' ', '');
-
-    let SKU = filterName.slice(0, 3) + filterCategory.slice(0,2);
-    return SKU.toUpperCase();
-  }
-
-  if (formatIsValid()) {
-      return {
-      name,
-      category,
-      quantity,
-      SKU: generateSKU(),
+const Construct = (function()  {
+  let counter = 0;
+  return function() {
+    this.increment = function() {
+      counter += 1;
+      return counter;
     }
-  } else {
-    return { notValid: true }
-  }
-}
-
-const ItemManager = (function() {
-  const getItem = (items, SKU) => items.find(item => SKU === item.SKU);
-  return {
-    items: [],
-
-    create(name, category, quantity) {
-      let item = createItem(name, category, quantity);
-      if (!item['notValid'])this.items.push(item);
-    },
-
-    update(SKU, updateObj) {
-      let item = getItem(this.items, SKU);
-      let [updateProp, updateVal] = Object.entries(updateObj).flat();
-      item[updateProp] = updateVal;
-    },
-
-    delete(SKU) {
-      let item = getItem(this.items, SKU);
-      this.items.splice(this.items.indexOf(item), 1);
-    },
-
-    inStock() {
-      return this.items.filter(item => item.quantity > 0);
-    },
-
-    itemsInCategory(category) {
-      return this.items.filter(item => item.category === category);
-    },
   };
 })();
 
+let item = new Construct();
+console.log(item.increment()); // 1
+console.log(item.increment()); // 2
 
-ItemManager.create('basket ball', 'sports', 0);           // valid item
-ItemManager.create('asd', 'sports', 0);
-ItemManager.create('soccer ball', 'sports', 5);           // valid item
-ItemManager.create('football', 'sports');
-ItemManager.create('football', 'sports', 3);              // valid item
-ItemManager.create('kitchen pot', 'cooking items', 0);
-ItemManager.create('kitchen pot', 'cooking', 3);          // valid item
+let item1 = new Construct();
+console.log(item1.increment()); // 3
+console.log(item1.increment()); // 4
 
-ItemManager.inStock();
+function factory(){
+  let counter = 0;
+  return {
+    increment: function() {
+      counter += 1;
+      return counter;
+    }
+  };
+}
 
-ItemManager.update('SOCSP', { quantity: 0 });
+let newItem = factory();
+console.log(newItem.increment()); // 1
+console.log(newItem.increment()); // 2
 
-console.log(ItemManager.inStock());
+let newItem1 = factory();
+console.log(newItem1.increment()); // 1
+console.log(newItem1.increment()); // 2
