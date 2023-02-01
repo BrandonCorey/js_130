@@ -1,5 +1,5 @@
 //  Create robot with random name
-
+"use strict";
 const Robot = (() => {
   const generateRandomChar = (count) => {
     let char;
