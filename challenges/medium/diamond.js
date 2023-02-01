@@ -55,7 +55,6 @@ class Diamond {
     return string;
   }
 
-
   static middleSpaces(letter) {
     let currLetterIdx = 1;
     let spaces = 1;
