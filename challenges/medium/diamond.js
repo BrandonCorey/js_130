@@ -38,9 +38,11 @@ const Diamond = (() => {
     static makeDiamond(char) {
       const charIdx = LETTER.indexOf(char);
       let result = '';
+
       for (let letterIdx = 0; letterIdx <= charIdx; letterIdx++) {
         result += buildDiamond(letterIdx, charIdx);
       }
+
       for (let letterIdx = charIdx - 1; letterIdx >= 0; letterIdx--) {
         result += buildDiamond(letterIdx, charIdx);
       }
