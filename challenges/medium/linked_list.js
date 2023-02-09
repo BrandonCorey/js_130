@@ -15,7 +15,7 @@ class Element {
   }
 
   next() {
-    return this.tail === this ? null : this.tail;
+    return this.isTail() ? null : this.tail;
   }
 }
 
