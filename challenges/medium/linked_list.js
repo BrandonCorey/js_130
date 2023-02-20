@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 class Element {
   constructor(data, tail = this) {
@@ -71,4 +71,4 @@ class SimpleLinkedList {
   }
 }
 
-module.exports = { SimpleLinkedList, Element }
+module.exports = { SimpleLinkedList, Element };
